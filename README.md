@@ -1,2 +1,4 @@
 KALKULAČKA
-vlastní projekt za účelem vytvoření kalkulačky
+vlastní projekt za účelem vytvoření multiplatformní kalkulačky
+
+STOLNÍ HRA
