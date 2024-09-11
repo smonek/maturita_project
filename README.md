@@ -4,3 +4,6 @@ KALKULAČKA
 vlastní projekt za účelem vytvoření multiplatformní kalkulačky
 
 python
+
+ROBOTIKA
+vyrobení a naprogramování robota
