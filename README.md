@@ -7,3 +7,4 @@ python
 
 ROBOTIKA
 vyrobení a naprogramování robota POPPY nebo jiné
+rozpoznání barev, krmič
