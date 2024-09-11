@@ -6,4 +6,4 @@ vlastní projekt za účelem vytvoření multiplatformní kalkulačky
 python
 
 ROBOTIKA
-vyrobení a naprogramování robota
+vyrobení a naprogramování robota POPPY nebo jiné
