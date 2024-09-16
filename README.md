@@ -8,4 +8,4 @@ Kamera bude od firmy Pixy
 
 ![image](https://github.com/user-attachments/assets/d4877efa-77d0-44a7-ac8a-69d06fae34d1)
 
-Kamera je schopná rozpoznat až sedm barev.
+Kamera je schopná rozpoznat až sedm barev. Také je schopná rozpoznat jednoduché čárové kódy.
