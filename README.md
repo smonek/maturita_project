@@ -1,10 +1,5 @@
 MATURITNÍ PROJEKT IT4
 
-KALKULAČKA
-vlastní projekt za účelem vytvoření multiplatformní kalkulačky
-
-python
-
 ROBOTIKA
-vyrobení a naprogramování robota POPPY nebo jiné
-rozpoznání barev, krmič
+
+Robot bude zaměřen na rozpoznání barev pomocí kamery. Cílem projektu je aby robot byl schopný rozpoznat aspoň černou od bílé nebo více barev a byl schopný jet po určené dráze.
