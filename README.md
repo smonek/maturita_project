@@ -11,3 +11,13 @@ Kamera bude od firmy Pixy
 Kamera je schopná rozpoznat až sedm barev. Také je schopná rozpoznat jednoduché čárové kódy.
 
 Nejdříve se musím rozhodnout jestli bude robot na kolečkách nebo pásech anebo bude chodit. Potom potřebné součástky vytisknu na 3D tiskárně kterou mám k dispozici na univerzitě, najdu vhodné Servo pohony, které tam jsou také k dispozici společně také s dříve zmíněnou kamerou PIXY.
+
+Konkurenční projekty a zdroje: 
+
+https://github.com/ev3dev/ev3dev.github.io/blob/master/docs/tutorials/using-pixy-camera.md
+
+https://github.com/ilyas9461/Pixy2-ball-sensing
+
+složka peti projektů: https://github.com/topics/pixycam?l=c%2B%2B
+
+tutoriál: https://github.com/KWSmit/Pixy_ev3dev
