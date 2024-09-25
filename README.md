@@ -26,4 +26,4 @@ POSTUP:
 
 1. Zjistím si a seženu si všechny potřebné části projektu (kamera pixy, servo pohony, arduino, baterii, kable, tělo robota - 3D tiskárna nebo koupit) na Slezské univerzitě, kde bych měl mít přístup ke všemu.
 
-2. 
+2. Comming soon
