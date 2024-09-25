@@ -18,6 +18,12 @@ https://github.com/ev3dev/ev3dev.github.io/blob/master/docs/tutorials/using-pixy
 
 https://github.com/ilyas9461/Pixy2-ball-sensing
 
-složka peti projektů: https://github.com/topics/pixycam?l=c%2B%2B
+složka pěti projektů: https://github.com/topics/pixycam?l=c%2B%2B
 
 tutoriál: https://github.com/KWSmit/Pixy_ev3dev
+
+POSTUP: 
+
+1. Zjistím si a seženu si všechny potřebné části projektu (kamera pixy, servo pohony, arduino, baterii, kable, tělo robota - 3D tiskárna nebo koupit) na Slezské univerzitě, kde bych měl mít přístup ke všemu.
+
+2. 
