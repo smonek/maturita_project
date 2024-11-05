@@ -26,4 +26,8 @@ POSTUP:
 
 1. Zjistím si a seženu si všechny potřebné části projektu (kamera pixy, servo pohony, arduino, baterii, kable, tělo robota - 3D tiskárna nebo koupit) na Slezské univerzitě, kde bych měl mít přístup ke všemu.
 
-2. Comming soon
+2. Promůuvím s docentem jestli si mohu vzít kameru domů a zeptám se ho na to co je vše potřeba na její zapnutí.
+
+3. Doma nejdříve rozchodím pouze kameru aby byla schopná rozpoznat barvy a snadné čárové kódy.
+
+4. Až budu mít toto tak začnu pracovat na těle robota pokud ho budu chtít stále implementovat.
