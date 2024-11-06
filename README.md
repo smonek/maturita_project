@@ -31,3 +31,5 @@ POSTUP:
 3. Doma nejdříve rozchodím pouze kameru aby byla schopná rozpoznat barvy a snadné čárové kódy.
 
 4. Až budu mít toto tak začnu pracovat na těle robota pokud ho budu chtít stále implementovat.
+
+5. Budu používat https://pixymon.software.informer.com/2.0/
