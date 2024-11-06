@@ -32,4 +32,4 @@ POSTUP:
 
 4. Až budu mít toto tak začnu pracovat na těle robota pokud ho budu chtít stále implementovat.
 
-5. Budu používat https://pixymon.software.informer.com/2.0/
+5. Budu používat Arduino Integrated Development Environment
