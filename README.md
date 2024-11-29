@@ -1,13 +1,19 @@
 MATURITNÍ PROJEKT IT4
 
 ROBOTIKA
-Robot bude zaměřen na rozpoznání barev pomocí kamery. Cílem projektu je aby robot byl schopný rozpoznat aspoň černou od bílé nebo více barev a nebo různé čárové kódy.
-Kamera bude od firmy Pixy
-Budu používat Arduino Integrated Development Environment
+Robot bude zaměřen na rozpoznání barev pomocí kamery. Cílem projektu je aby robot byl schopný rozpoznat více barev jejich pozici a rozměry a případně různé čárové kódy.
+Kamera bude od firmy Pixy a verze kamery je Pixy1.
+Kamera je schopná rozpoznat až sedm barev. Také je schopná rozpoznat jednoduché čárové kódy, velikost objektu.
 
 ![image](https://github.com/user-attachments/assets/d4877efa-77d0-44a7-ac8a-69d06fae34d1)
 
-Kamera je schopná rozpoznat až sedm barev. Také je schopná rozpoznat jednoduché čárové kódy, velikost objektu.
+Budu používat **Arduino Integrated Development Environment** a uploadovat budu na arduino nano v4.
+
+![image](https://github.com/user-attachments/assets/66edcb89-0c16-42e4-a337-dd630b5e97c9)
+
+Kameru s arduinem jsem propojil pomocí kabelu mg connfly.
+
+![image](https://github.com/user-attachments/assets/2166f69e-408c-4976-8c6b-d90e816519b2)
 
 Konkurenční projekty a zdroje: 
 https://github.com/ev3dev/ev3dev.github.io/blob/master/docs/tutorials/using-pixy-camera.md
