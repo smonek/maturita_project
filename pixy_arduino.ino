@@ -13,13 +13,19 @@ void setup() {
 
 void loop() {
   int blockCount = pixy.getBlocks();
+  int targetSignature = 1;
+  int signatureCount = 0;
 
   if (blockCount > 0) {
     Serial.print("Detected ");
     Serial.print(blockCount);
     Serial.println(" blocks:");
-    
+
     for (int i = 0; i < blockCount; i++) {
+      if (pixy.blocks[i].signature == targetSignature) {
+        signatureCount++;
+      }
+
       Serial.print("Block ");
       Serial.print(i + 1);
       Serial.print(": ");
@@ -34,6 +40,11 @@ void loop() {
       Serial.print(", Height: ");
       Serial.println(pixy.blocks[i].height);
     }
+
+    Serial.print("Objects detected with signature ");
+    Serial.print(targetSignature);
+    Serial.print(": ");
+    Serial.println(signatureCount);
   } else {
     Serial.println("No blocks detected.");
   }
