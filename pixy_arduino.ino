@@ -16,6 +16,9 @@ void loop() {
   int targetSignature = 1;
   int signatureCount = 0;
 
+  Serial.print("getBlocks() returned: ");
+  Serial.println(blockCount);
+
   if (blockCount > 0) {
     Serial.print("Detected ");
     Serial.print(blockCount);
@@ -28,8 +31,7 @@ void loop() {
 
       Serial.print("Block ");
       Serial.print(i + 1);
-      Serial.print(": ");
-      Serial.print("Signature: ");
+      Serial.print(": Signature: ");
       Serial.print(pixy.blocks[i].signature);
       Serial.print(", X: ");
       Serial.print(pixy.blocks[i].x);
@@ -48,5 +50,6 @@ void loop() {
   } else {
     Serial.println("No blocks detected.");
   }
+
   delay(1500);
 }
