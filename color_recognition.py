@@ -5,7 +5,7 @@ lower = np.array([255, 255, 255])
 upper = np.array([255, 255, 255])
 
 color_name = "Undefined"
-calibration_ratio = 14.5  # Pixels per cm (predefined ratio)
+calibration_ratio = None
 
 def get_color_name(h, s, v):
     """Determine the color name based on HSV values."""
@@ -29,7 +29,7 @@ def get_color_name(h, s, v):
         return "Unknown"
 
 def pick_color(event, x, y, flags, param):
-    global lower, upper, hsv_image, color_name
+    global lower, upper, hsv_image, color_name, calibration_ratio
     if event == cv2.EVENT_LBUTTONDOWN:
         hsv_pixel = hsv_image[y, x]
         h, s, v = hsv_pixel
@@ -52,6 +52,17 @@ def pick_color(event, x, y, flags, param):
             lower = np.array([max(h - 10, 0), max(s - 40, 0), max(v - 40, 0)])
             upper = np.array([min(h + 10, 179), min(s + 40, 255), min(v + 40, 255)])
             print(f"New HSV Range: Lower={lower}, Upper={upper}")
+
+    elif event == cv2.EVENT_RBUTTONDOWN:
+        print("Right-click detected. Select a reference object.")
+        for contour in contours:
+            if cv2.contourArea(contour) > 500:
+                x, y, w, h = cv2.boundingRect(contour)
+                print(f"Reference object width in pixels: {w}")
+                actual_width = float(input("Enter the actual width of the object in cm: "))
+                calibration_ratio = w / actual_width
+                print(f"Calibration ratio updated: {calibration_ratio} pixels per cm")
+                break
 
 video = cv2.VideoCapture(0)
 
@@ -79,13 +90,12 @@ while True:
             if cv2.contourArea(contour) > 500:
                 x, y, w, h = cv2.boundingRect(contour)
 
-                # Measure object size using the predefined ratio
-                real_width = w / calibration_ratio
-                real_height = h / calibration_ratio
-                cv2.putText(img, f"{real_width:.1f}x{real_height:.1f} cm", (x, y - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                if calibration_ratio:
+                    real_width = w / calibration_ratio
+                    real_height = h / calibration_ratio
+                    cv2.putText(img, f"{real_width:.1f}x{real_height:.1f} cm", (x, y - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-                # Draw bounding box
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
                 cv2.putText(img, color_name, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
