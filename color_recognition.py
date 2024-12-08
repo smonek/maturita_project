@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
 
-lower = np.array([255,255,255])
+lower = np.array([255, 255, 255])
 upper = np.array([255, 255, 255])
 
 color_name = "Undefined"
+calibration_ratio = 14.5  # Pixels per cm (predefined ratio)
 
 def get_color_name(h, s, v):
     """Determine the color name based on HSV values."""
@@ -77,8 +78,16 @@ while True:
         for contour in contours:
             if cv2.contourArea(contour) > 500:
                 x, y, w, h = cv2.boundingRect(contour)
+
+                # Measure object size using the predefined ratio
+                real_width = w / calibration_ratio
+                real_height = h / calibration_ratio
+                cv2.putText(img, f"{real_width:.1f}x{real_height:.1f} cm", (x, y - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+                # Draw bounding box
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
-                cv2.putText(img, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                cv2.putText(img, color_name, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
         cv2.imshow("Mask", mask)
         cv2.imshow("Webcam", img)
