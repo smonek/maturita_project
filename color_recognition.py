@@ -8,25 +8,24 @@ color_name = "Undefined"
 calibration_ratio = None
 
 def get_color_name(h, s, v):
-    """Determine the color name based on HSV values."""
     if s < 40 and v > 200:
-        return "White"
+        return "Bila"
     elif v < 40:
-        return "Black"
+        return "Cerna"
     elif s < 40:
-        return "Gray"
+        return "Seda"
     elif h < 10 or h > 170:
-        return "Red"
+        return "Cervena"
     elif 10 <= h < 25:
-        return "Orange"
+        return "Oranzova"
     elif 25 <= h < 35:
-        return "Yellow"
+        return "Zluta"
     elif 35 <= h < 85:
-        return "Green"
+        return "Zelena"
     elif 85 <= h < 170:
-        return "Blue"
+        return "Modra"
     else:
-        return "Unknown"
+        return "Nerozpoznana"
 
 def pick_color(event, x, y, flags, param):
     global lower, upper, hsv_image, color_name, calibration_ratio
