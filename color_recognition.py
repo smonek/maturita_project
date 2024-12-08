@@ -1,18 +1,56 @@
 import cv2
 import numpy as np
 
-lower = np.array([15, 100, 100])
-upper = np.array([35, 255, 255])
+lower = np.array([255,255,255])
+upper = np.array([255, 255, 255])
+
+color_name = "Undefined"
+
+def get_color_name(h, s, v):
+    """Determine the color name based on HSV values."""
+    if s < 40 and v > 200:
+        return "White"
+    elif v < 40:
+        return "Black"
+    elif s < 40:
+        return "Gray"
+    elif h < 10 or h > 170:
+        return "Red"
+    elif 10 <= h < 25:
+        return "Orange"
+    elif 25 <= h < 35:
+        return "Yellow"
+    elif 35 <= h < 85:
+        return "Green"
+    elif 85 <= h < 170:
+        return "Blue"
+    else:
+        return "Unknown"
 
 def pick_color(event, x, y, flags, param):
-    global lower, upper, hsv_image
+    global lower, upper, hsv_image, color_name
     if event == cv2.EVENT_LBUTTONDOWN:
         hsv_pixel = hsv_image[y, x]
         h, s, v = hsv_pixel
 
-        lower = np.array([max(h - 10, 0), max(s - 40, 0), max(v - 40, 0)])
-        upper = np.array([min(h + 10, 179), min(s + 40, 255), min(v + 40, 255)])
-        print(f"New HSV Range: Lower={lower}, Upper={upper}")
+        color_name = get_color_name(h, s, v)
+
+        if h < 10 or h > 170:
+            lower1 = np.array([max(h - 10, 0), max(s - 40, 0), max(v - 40, 0)])
+            upper1 = np.array([min(h + 10, 179), min(s + 40, 255), min(v + 40, 255)])
+            if h < 10:
+                lower2 = np.array([170, max(s - 40, 0), max(v - 40, 0)])
+                upper2 = np.array([179, min(s + 40, 255), min(v + 40, 255)])
+            else:
+                lower2 = np.array([0, max(s - 40, 0), max(v - 40, 0)])
+                upper2 = np.array([10, min(s + 40, 255), min(v + 40, 255)])
+            lower = (lower1, lower2)
+            upper = (upper1, upper2)
+            print(f"New HSV Range for Red: Lower1={lower1}, Upper1={upper1}, Lower2={lower2}, Upper2={upper2}")
+        else:
+            lower = np.array([max(h - 10, 0), max(s - 40, 0), max(v - 40, 0)])
+            upper = np.array([min(h + 10, 179), min(s + 40, 255), min(v + 40, 255)])
+            print(f"New HSV Range: Lower={lower}, Upper={upper}")
 
 video = cv2.VideoCapture(0)
 
@@ -21,22 +59,31 @@ cv2.setMouseCallback("Webcam", pick_color)
 
 while True:
     success, img = video.read()
-    if not success:
+    if not success or img is None:
         print("Failed to capture video frame")
         break
 
     hsv_image = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv_image, lower, upper)
+    try:
+        if isinstance(lower, tuple):
+            mask1 = cv2.inRange(hsv_image, lower[0], upper[0])
+            mask2 = cv2.inRange(hsv_image, lower[1], upper[1])
+            mask = cv2.bitwise_or(mask1, mask2)
+        else:
+            mask = cv2.inRange(hsv_image, lower, upper)
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    for contour in contours:
-        if cv2.contourArea(contour) > 500:
-            x, y, w, h = cv2.boundingRect(contour)
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            if cv2.contourArea(contour) > 500:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
+                cv2.putText(img, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-    cv2.imshow("Mask", mask)
-    cv2.imshow("Webcam", img)
+        cv2.imshow("Mask", mask)
+        cv2.imshow("Webcam", img)
+    except Exception as e:
+        print(f"Error during processing: {e}")
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
