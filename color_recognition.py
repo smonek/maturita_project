@@ -4,7 +4,7 @@ import numpy as np
 lower = np.array([255, 255, 255])
 upper = np.array([255, 255, 255])
 
-color_name = "Nepojmenovana"
+color_name = "Undefined"
 calibration_ratio = None
 
 def get_color_name(h, s, v):
@@ -56,10 +56,11 @@ def pick_color(event, x, y, flags, param):
         print("Right-click detected. Select a reference object.")
         for contour in contours:
             if cv2.contourArea(contour) > 500:
-                x, y, w, h = cv2.boundingRect(contour)
-                print(f"Reference object width in pixels: {w}")
+                rect = cv2.minAreaRect(contour) 
+                width = rect[1][0]
+                print(f"Reference object width in pixels: {width}")
                 actual_width = float(input("Enter the actual width of the object in cm: "))
-                calibration_ratio = w / actual_width
+                calibration_ratio = width / actual_width
                 print(f"Calibration ratio updated: {calibration_ratio} pixels per cm")
                 break
 
@@ -87,16 +88,20 @@ while True:
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for contour in contours:
             if cv2.contourArea(contour) > 500:
-                x, y, w, h = cv2.boundingRect(contour)
+                rect = cv2.minAreaRect(contour)
+                box = cv2.boxPoints(rect)
+                box = box.astype(np.int32) 
+                cv2.drawContours(img, [box], 0, (0, 0, 255), 3)
 
                 if calibration_ratio:
-                    real_width = w / calibration_ratio
-                    real_height = h / calibration_ratio
-                    cv2.putText(img, f"{real_width:.1f}x{real_height:.1f} cm", (x, y - 10),
+                    width = rect[1][0] / calibration_ratio
+                    height = rect[1][1] / calibration_ratio
+                    cv2.putText(img, f"{width:.1f}x{height:.1f} cm", 
+                                (box[0][0], box[0][1] - 10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 3)
-                cv2.putText(img, color_name, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                cv2.putText(img, color_name, (box[0][0], box[0][1] - 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
         cv2.imshow("Mask", mask)
         cv2.imshow("Webcam", img)
