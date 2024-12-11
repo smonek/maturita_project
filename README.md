@@ -21,3 +21,4 @@ Momentálně kamera umí nejen rozpoznat barvu, ale také ji označit, pojmenova
 ![Snímek obrazovky 2024-12-08 203525](https://github.com/user-attachments/assets/b8999cea-0752-4a9b-997a-7aa3f51f1d2d)
 
 !!!!!!UŽIVATELSKÉ ROZHRANÍ!!!!
+OpenCV JS
