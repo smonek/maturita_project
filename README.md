@@ -19,3 +19,5 @@ https://github.com/Practical-CV/Measuring-Size-of-Objects-with-OpenCV
 Momentálně kamera umí nejen rozpoznat barvu, ale také ji označit, pojmenovat a změřit velikost objektu. To všechno dynamicky přímo výběrem v okně, ve kterém vidíte to, co vidí kamera. Levé tlačítko na myši pro barvu a pravé tlačítko na myši pro zadání velikosti objektu v centimetrech, to se potom zpočítá a zkalibruje na pixely a změří daný objekt.
 
 ![Snímek obrazovky 2024-12-08 203525](https://github.com/user-attachments/assets/b8999cea-0752-4a9b-997a-7aa3f51f1d2d)
+
+!!!!!!UŽIVATELSKÉ ROZHRANÍ!!!!
