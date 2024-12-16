@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Detection with OpenCV.js</title>
+    <script async src="https://docs.opencv.org/master/opencv.js"></script>
+    <style>
+        canvas, video { border: 1px solid black; }
+        .controls { margin-top: 20px; }
+        .slider { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Color Detection and Measurement</h1>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+    <div class="controls">
+        <h3>HSV Thresholds</h3>
+        <label>Hue Min: <input type="range" id="hueMin" min="0" max="179" value="0" class="slider"></label>
+        <label>Hue Max: <input type="range" id="hueMax" min="0" max="179" value="179" class="slider"></label>
+        <label>Sat Min: <input type="range" id="satMin" min="0" max="255" value="0" class="slider"></label>
+        <label>Sat Max: <input type="range" id="satMax" min="0" max="255" value="255" class="slider"></label>
+        <label>Val Min: <input type="range" id="valMin" min="0" max="255" value="0" class="slider"></label>
+        <label>Val Max: <input type="range" id="valMax" min="0" max="255" value="255" class="slider"></label>
+        <h3>Calibration</h3>
+        <label>Reference Object Width (cm): <input type="number" id="referenceWidth" step="0.1"></label>
+        <button id="calibrate">Calibrate</button>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>
