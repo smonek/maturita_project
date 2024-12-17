@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctxRaw = canvasRaw.getContext('2d');
     const ctxBW = canvasBW.getContext('2d');
     const colorInput = document.getElementById('targetColor');
-    const colorCountDisplay = document.getElementById('colorCount');
 
     let lower = [0, 0, 0];  // Lower HSV bound
     let upper = [180, 255, 255];  // Upper HSV bound
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Apply the current color range for detection
         const targetColor = { h: lower[0], s: lower[1], v: lower[2] };  // Current color range
-        let colorPixelCount = 0;
         const mask = new Uint8Array(pixels.length / 4);
 
         // Convert each pixel to HSV and check if it's within the target range
@@ -78,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const hsv = rgbToHsv(r, g, b);
             if (isColorInRange(hsv, lower, upper)) {
                 mask[i / 4] = 1;
-                colorPixelCount++;
                 pixels[i] = 255;    // Highlight matching pixels in white (for raw video)
                 pixels[i + 1] = 255;
                 pixels[i + 2] = 255;
@@ -106,9 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
             bwImageData.data[i + 3] = 255;   // Alpha channel
         }
         ctxBW.putImageData(bwImageData, 0, 0);
-
-        // Display the count of detected pixels
-        colorCountDisplay.textContent = colorPixelCount;
 
         // Request the next animation frame
         requestAnimationFrame(processVideo);
@@ -184,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Draw a red bounding box around the contour
+    // Draw a red bounding box around the contour (border only)
     function drawBoundingBox(contour, pixels, width) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         contour.forEach(index => {
@@ -196,18 +190,28 @@ document.addEventListener('DOMContentLoaded', () => {
             maxY = Math.max(maxY, y);
         });
 
-        // Draw bounding box on raw video (canvasRaw)
+        // Draw the bounding box border
         for (let x = minX; x <= maxX; x++) {
-            for (let y = minY; y <= maxY; y++) {
-                const pixelIndex = (y * width + x) * 4;
-                pixels[pixelIndex] = 255;     // Red
-                pixels[pixelIndex + 1] = 0;   // Green
-                pixels[pixelIndex + 2] = 0;   // Blue
-                pixels[pixelIndex + 3] = 255; // Alpha
-            }
+            pixels[(minY * width + x) * 4] = 255;
+            pixels[(minY * width + x) * 4 + 1] = 0;
+            pixels[(minY * width + x) * 4 + 2] = 0;
+
+            pixels[(maxY * width + x) * 4] = 255;
+            pixels[(maxY * width + x) * 4 + 1] = 0;
+            pixels[(maxY * width + x) * 4 + 2] = 0;
+        }
+
+        for (let y = minY; y <= maxY; y++) {
+            pixels[(y * width + minX) * 4] = 255;
+            pixels[(y * width + minX) * 4 + 1] = 0;
+            pixels[(y * width + minX) * 4 + 2] = 0;
+
+            pixels[(y * width + maxX) * 4] = 255;
+            pixels[(y * width + maxX) * 4 + 1] = 0;
+            pixels[(y * width + maxX) * 4 + 2] = 0;
         }
     }
 
     startVideo();
-    video.addEventListener('play', processVideo); // Start processing once video starts playing
+    video.addEventListener('play', processVideo);
 });

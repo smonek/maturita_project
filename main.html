@@ -8,16 +8,16 @@
 <body>
     <h1>Color Detection and Measurement</h1>
 
-    <video id="video" autoplay playsinline width="640" height="480" style="border: 1px solid black;"></video>
+    <video id="video" autoplay playsinline width="640" height="480" style="display: none;"></video>
 
-    <h3>Detected Color Pixels: <span id="colorCount">0</span></h3>
-
-    <label for="targetColor">Target Color (HEX): </label>
-    <input type="color" id="targetColor" value="#ff0000">
-
+    <!-- Raw video feed with red bounding boxes -->
     <canvas id="canvasRaw" width="640" height="480" style="border: 1px solid black;"></canvas>
 
+    <!-- Second canvas with the black and white detection result -->
     <canvas id="canvasBW" width="640" height="480" style="border: 1px solid black;"></canvas>
+
+    <label for="targetColor">Target Color (HEX): </label>
+    <input type="color" id="targetColor" value="#ff0000"> <!-- Default to Red -->
 
     <script src="/script.js"></script>
 </body>
