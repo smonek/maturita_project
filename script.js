@@ -6,10 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctxBW = canvasBW.getContext('2d');
     const colorInput = document.getElementById('targetColor');
 
-    let lower = [0, 0, 0];  // Lower HSV bound
-    let upper = [180, 255, 255];  // Upper HSV bound
+    let lower = [0, 0, 0];
+    let upper = [180, 255, 255]; 
 
-    // Start the video feed
+    const MIN_CONTOUR_SIZE = 500;
+
     async function startVideo() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -22,19 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update the color range based on mouse click
     function updateColorRange(event, x, y) {
         const imgData = ctxRaw.getImageData(0, 0, canvasRaw.width, canvasRaw.height);
         const pixel = imgData.data;
 
         const idx = (y * canvasRaw.width + x) * 4;
-        const r = pixel[idx];     // Red channel
-        const g = pixel[idx + 1]; // Green channel
-        const b = pixel[idx + 2]; // Blue channel
+        const r = pixel[idx]; 
+        const g = pixel[idx + 1]; 
+        const b = pixel[idx + 2]; 
 
         const targetColor = rgbToHsv(r, g, b);
 
-        // Update the lower and upper bounds based on the selected color
         const tolerance = 30;
         lower = [
             Math.max(targetColor.h - tolerance, 0),
@@ -50,65 +49,55 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Updated color range:', lower, upper);
     }
 
-    // Mouse click listener for color selection
     canvasRaw.addEventListener('click', (event) => {
         const x = event.offsetX;
         const y = event.offsetY;
         updateColorRange(event, x, y);
     });
 
-    // Process each video frame for color detection and object bounding
     function processVideo() {
         ctxRaw.drawImage(video, 0, 0, canvasRaw.width, canvasRaw.height);
         const frame = ctxRaw.getImageData(0, 0, canvasRaw.width, canvasRaw.height);
         const pixels = frame.data;
-
-        // Apply the current color range for detection
-        const targetColor = { h: lower[0], s: lower[1], v: lower[2] };  // Current color range
+    
         const mask = new Uint8Array(pixels.length / 4);
-
-        // Convert each pixel to HSV and check if it's within the target range
+    
         for (let i = 0; i < pixels.length; i += 4) {
             const r = pixels[i];
             const g = pixels[i + 1];
             const b = pixels[i + 2];
-
+    
             const hsv = rgbToHsv(r, g, b);
             if (isColorInRange(hsv, lower, upper)) {
                 mask[i / 4] = 1;
-                pixels[i] = 255;    // Highlight matching pixels in white (for raw video)
-                pixels[i + 1] = 255;
-                pixels[i + 2] = 255;
             } else {
                 mask[i / 4] = 0;
             }
         }
-
-        // Detect and draw bounding boxes around matching regions
+    
         const contours = findContours(mask);
         contours.forEach(contour => {
-            drawBoundingBox(contour, pixels, canvasRaw.width);
+            if (contour.length >= MIN_CONTOUR_SIZE) {
+                drawBoundingBox(contour, pixels, canvasRaw.width);
+            }
         });
-
-        // Draw the processed image to the raw canvas (with bounding boxes)
+    
         ctxRaw.putImageData(frame, 0, 0);
-
-        // Draw the binary black-and-white mask to the second canvas
+    
         const bwImageData = new ImageData(canvasRaw.width, canvasRaw.height);
-        for (let i = 0; i < pixels.length; i += 4) {
-            const value = mask[i / 4] * 255;
-            bwImageData.data[i] = value;     // Red channel
-            bwImageData.data[i + 1] = value; // Green channel
-            bwImageData.data[i + 2] = value; // Blue channel
-            bwImageData.data[i + 3] = 255;   // Alpha channel
+        for (let i = 0; i < mask.length; i++) {
+            const value = mask[i] * 255;
+            const idx = i * 4;
+            bwImageData.data[idx] = value;
+            bwImageData.data[idx + 1] = value;
+            bwImageData.data[idx + 2] = value;
+            bwImageData.data[idx + 3] = 255;
         }
         ctxBW.putImageData(bwImageData, 0, 0);
-
-        // Request the next animation frame
+    
         requestAnimationFrame(processVideo);
     }
-
-    // Check if the color is within the given range
+    
     function isColorInRange(hsv, lower, upper) {
         return (
             hsv.h >= lower[0] && hsv.h <= upper[0] &&
@@ -117,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     }
 
-    // Convert RGB to HSV
     function rgbToHsv(r, g, b) {
         r /= 255;
         g /= 255;
@@ -143,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return { h: h * 180, s: s * 255, v: v * 255 };
     }
 
-    // Find contours from a binary mask
     function findContours(mask) {
         let contours = [];
         let visited = new Set();
@@ -158,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return contours;
     }
 
-    // Depth-first search for contour discovery
     function dfs(i, contour, visited, mask, width) {
         const directions = [-1, 1, -width, width];
         const stack = [i];
@@ -178,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Draw a red bounding box around the contour (border only)
     function drawBoundingBox(contour, pixels, width) {
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         contour.forEach(index => {
@@ -190,25 +175,20 @@ document.addEventListener('DOMContentLoaded', () => {
             maxY = Math.max(maxY, y);
         });
 
-        // Draw the bounding box border
-        for (let x = minX; x <= maxX; x++) {
-            pixels[(minY * width + x) * 4] = 255;
-            pixels[(minY * width + x) * 4 + 1] = 0;
-            pixels[(minY * width + x) * 4 + 2] = 0;
-
-            pixels[(maxY * width + x) * 4] = 255;
-            pixels[(maxY * width + x) * 4 + 1] = 0;
-            pixels[(maxY * width + x) * 4 + 2] = 0;
-        }
-
-        for (let y = minY; y <= maxY; y++) {
-            pixels[(y * width + minX) * 4] = 255;
-            pixels[(y * width + minX) * 4 + 1] = 0;
-            pixels[(y * width + minX) * 4 + 2] = 0;
-
-            pixels[(y * width + maxX) * 4] = 255;
-            pixels[(y * width + maxX) * 4 + 1] = 0;
-            pixels[(y * width + maxX) * 4 + 2] = 0;
+        const thickness = 3;
+        for (let t = 0; t < thickness; t++) {
+            for (let x = minX; x <= maxX; x++) {
+                const topIdx = ((minY + t) * width + x) * 4;
+                const bottomIdx = ((maxY - t) * width + x) * 4;
+                pixels[topIdx] = pixels[bottomIdx] = 255; pixels[topIdx + 1] = pixels[bottomIdx + 1] = 0;
+                pixels[topIdx + 2] = pixels[bottomIdx + 2] = 0;
+            }
+            for (let y = minY; y <= maxY; y++) {
+                const leftIdx = ((y * width) + (minX + t)) * 4;
+                const rightIdx = ((y * width) + (maxX - t)) * 4;
+                pixels[leftIdx] = pixels[rightIdx] = 255; pixels[leftIdx + 1] = pixels[rightIdx + 1] = 0;
+                pixels[leftIdx + 2] = pixels[rightIdx + 2] = 0;
+            }
         }
     }
 

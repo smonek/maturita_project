@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Detection with Canvas</title>
+    <title>Rozpoznávání barev pomocí kamery</title>
 </head>
 <body>
-    <h1>Color Detection and Measurement</h1>
+    <h1>Rozpoznávání barev pomocí kamery</h1>
 
     <video id="video" autoplay playsinline width="640" height="480" style="display: none;"></video>
 
-    <!-- Raw video feed with red bounding boxes -->
-    <canvas id="canvasRaw" width="640" height="480" style="border: 1px solid black;"></canvas>
+    <div>
+        <canvas id="canvasRaw" width="640" height="480" style="border: 1px solid black;"></canvas>
+        <canvas id="canvasBW" width="640" height="480" style="border: 1px solid black;"></canvas>
+        <p id="colorNameBW" style="font-weight: bold;">Detekovaná barva: </p>
+    </div>
 
-    <!-- Second canvas with the black and white detection result -->
-    <canvas id="canvasBW" width="640" height="480" style="border: 1px solid black;"></canvas>
-
-    <label for="targetColor">Target Color (HEX): </label>
-    <input type="color" id="targetColor" value="#ff0000"> <!-- Default to Red -->
+    <p>Pomocí kliknutí na video vyber detekovanou barvu.</p>
 
     <script src="/script.js"></script>
 </body>
